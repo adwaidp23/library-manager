@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Admin Dashboard</h2>
+        <div>
+            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-primary">
+                <i class="bi bi-people-fill"></i> Manage Users
+            </a>
+            <a href="{{ url_for('books.add_book') }}" class="btn btn-success ms-2">
+                <i class="bi bi-book"></i> Add New Book
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Total Books</h5>
+                    <p class="card-text fs-2 fw-bold">{{ books_count }}</p>
+                    <small>In library collection</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Active Members</h5>
+                    <p class="card-text fs-2 fw-bold">{{ users_count }}</p>
+                    <small>Registered users</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3 shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Active Loans</h5>
+                    <p class="card-text fs-2 fw-bold">{{ loans_count }}</p>
+                    <small>Books currently borrowed</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow mb-5">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Current Loan Status</h5>
+            <span class="badge bg-light text-dark">{{ loans_count }} Active</span>
+        </div>
+        <div class="card-body">
+            {% if loans %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Borrower</th>
+                            <th>Book Title</th>
+                            <th>Borrowed Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loan in loans %}
+                        <tr>
+                            <td>
+                                <strong>{{ loan.user.name }}</strong><br>
+                                <small class="text-muted">{{ loan.user.email }}</small>
+                            </td>
+                            <td>{{ loan.copy.book.title }}</td>
+                            <td>{{ loan.borrow_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ loan.due_date.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                {% if loan.due_date < now %}
+                                    <span class="badge bg-danger">OVERDUE</span>
+                                {% else %}
+                                    <span class="badge bg-success">On Time</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="text-muted text-center my-3">No books are currently borrowed.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h3 class="mb-3">User Feedback & Reports</h3>
+    <div class="card shadow mb-5">
+        <div class="card-body">
+            {% if feedbacks %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 15%">Date</th>
+                            <th style="width: 20%">User</th>
+                            <th style="width: 20%">Subject</th>
+                            <th>Message</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in feedbacks %}
+                        <tr>
+                            <td class="text-muted">{{ item.date.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <strong>{{ item.user.name }}</strong><br>
+                                <small class="text-muted">{{ item.user.email }}</small>
+                            </td>
+                            <td>
+                                {% if 'Bug' in item.subject %}
+                                    <span class="badge bg-danger">{{ item.subject }}</span>
+                                {% elif 'Request' in item.subject %}
+                                    <span class="badge bg-success">{{ item.subject }}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ item.subject }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.message }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <div class="alert alert-light text-center border">
+                    No feedback messages received yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

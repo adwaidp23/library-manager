@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h3 class="mb-0">Library Rules & Regulations</h3>
+        </div>
+        <div class="card-body">
+            <h5>1. Membership</h5>
+            <p>All students and faculty must register to borrow books. Library cards are non-transferable.</p>
+            <hr>
+            <h5>2. Borrowing Limits</h5>
+            <ul>
+                <li>Students may borrow up to <strong>3 books</strong> at a time.</li>
+                <li>Faculty may borrow up to <strong>5 books</strong>.</li>
+            </ul>
+            <hr>
+            <h5>3. Loan Period & Fines</h5>
+            <ul>
+                <li>Standard loan period is <strong>14 days</strong>.</li>
+                <li>Overdue fines are charged at <strong>₹2.00 per day</strong>.</li>
+                <li>Lost books must be replaced or paid for at market value.</li>
+            </ul>
+            <hr>
+            <h5>4. General Conduct</h5>
+            <p>Silence must be maintained. No food or drink allowed inside the library premises.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

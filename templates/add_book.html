@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Add New Book to Library</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Book Title</label>
+                            <input type="text" class="form-control" name="title" required placeholder="e.g. The Great Gatsby">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Author</label>
+                            <input type="text" class="form-control" name="author" required placeholder="e.g. F. Scott Fitzgerald">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">ISBN (Unique ID)</label>
+                            <input type="text" class="form-control" name="isbn" required placeholder="e.g. 9780743273565">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Total Copies</label>
+                            <input type="number" class="form-control" name="total_copies" value="1" min="1" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Cover Image</label>
+                        <input type="file" class="form-control" name="cover_image" accept=".jpg, .jpeg, .png">
+                        <div class="form-text">Allowed formats: JPG, PNG. (Leave empty for default image)</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description / Blurb</label>
+                        <textarea class="form-control" name="description" rows="3" placeholder="Enter a short summary of the book..."></textarea>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">Add Book</button>
+                        <a href="{{ url_for('books.search') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

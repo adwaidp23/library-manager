@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('books.search') }}" class="btn btn-outline-secondary mb-4">
+        <i class="bi bi-arrow-left"></i> &larr; Back to Catalog
+    </a>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 450px; overflow: hidden; border-radius: 5px;">
+                    {% if book.cover_image and book.cover_image != 'default.jpg' %}
+                        <img src="{{ url_for('static', filename='cover_pages/' + book.cover_image) }}" 
+                             alt="{{ book.title }}" 
+                             class="img-fluid" 
+                             style="height: 100%; width: 100%; object-fit: cover;">
+                    {% else %}
+                        <div class="text-center text-muted">
+                            <h1 class="display-4">📖</h1>
+                            <p>No Cover Available</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h1 class="display-5 fw-bold">{{ book.title }}</h1>
+            <h4 class="text-muted mb-3">by {{ book.author }}</h4>
+            
+            <p class="mb-2">
+                <span class="badge bg-secondary">{{ book.genre or 'General' }}</span>
+                <span class="text-muted ms-2">ISBN: {{ book.isbn }}</span>
+            </p>
+            
+            <hr class="my-4">
+            
+            <div class="card bg-light border-0 p-3 mb-4">
+                <h5 class="mb-3">Availability Status</h5>
+                
+                {% if book.available_copies > 0 %}
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div>
+                            <span class="badge bg-success fs-6 mb-1">In Stock</span>
+                            <div class="text-success fw-bold">
+                                {{ book.available_copies }} copies available on shelf
+                            </div>
+                        </div>
+                        
+                        <form action="{{ url_for('books.borrow_book', book_id=book.book_id) }}" method="POST">
+                            <button class="btn btn-success btn-lg shadow-sm">
+                                Borrow Book Now
+                            </button>
+                        </form>
+                    </div>
+
+                {% else %}
+                    <div class="alert alert-warning mb-3">
+                        <strong><i class="bi bi-exclamation-triangle"></i> Currently Unavailable</strong>
+                        {% if expected_date %}
+                            <br>Expected to return on: <strong>{{ expected_date.strftime('%Y-%m-%d') }}</strong>
+                        {% else %}
+                            <br>No copies currently available.
+                        {% endif %}
+                    </div>
+                    
+                    <button type="button" class="btn btn-warning w-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#reservationModal">
+                        Reserve This Book
+                    </button>
+                    <small class="text-muted mt-2 d-block text-center">You will be notified via email when it arrives.</small>
+                {% endif %}
+            </div>
+
+            <div class="mb-4">
+                <h5>Description</h5>
+                <p class="lead fs-6">{{ book.description or 'No description provided for this book.' }}</p>
+            </div>
+        </div>
+    </div>
+
+    {% if recommendations %}
+    <div class="mt-5 pt-4 border-top">
+        <h4 class="text-primary mb-3">
+            ✨ You might also like...
+        </h4>
+        <p class="text-muted">Based on the genre <strong>"{{ book.genre }}"</strong></p>
+        
+        <div class="row">
+            {% for rec in recommendations %}
+            <div class="col-md-3 col-6 mb-3">
+                <div class="card h-100 shadow-sm border-0">
+                    {% if rec.cover_image and rec.cover_image != 'default.jpg' %}
+                        <img src="{{ url_for('static', filename='cover_pages/' + rec.cover_image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="{{ rec.title }}">
+                    {% else %}
+                        <div class="bg-light text-center py-4" style="height: 150px;">📖</div>
+                    {% endif %}
+                    
+                    <div class="card-body p-2">
+                        <h6 class="card-title text-truncate mb-1">
+                            <a href="{{ url_for('books.book_details', book_id=rec.book_id) }}" class="text-decoration-none text-dark stretched-link">
+                                {{ rec.title }}
+                            </a>
+                        </h6>
+                        <small class="text-muted d-block">{{ rec.author }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>User Reviews & Ratings</h3>
+            <hr>
+            
+            <div class="card bg-light mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Leave a Review</h5>
+                    <form action="{{ url_for('books.add_review', book_id=book.book_id) }}" method="POST">
+                        <div class="row align-items-center g-3">
+                            <div class="col-auto">
+                                <select name="rating" class="form-select" required>
+                                    <option value="" disabled selected>Select Rating...</option>
+                                    <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+                                    <option value="4">⭐⭐⭐⭐ (Good)</option>
+                                    <option value="3">⭐⭐⭐ (Average)</option>
+                                    <option value="2">⭐⭐ (Poor)</option>
+                                    <option value="1">⭐ (Terrible)</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="text" name="review_text" class="form-control" placeholder="Share your thoughts on this book..." required>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-primary">Post Review</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="card mb-3 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="card-subtitle mb-2 text-primary fw-bold">
+                                {{ review.user.name }}
+                            </h6>
+                            <small class="text-muted">{{ review.review_date.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <div class="text-warning mb-2">
+                            {% for _ in range(review.rating) %}★{% endfor %}
+                            <span class="text-muted" style="opacity: 0.3">{% for _ in range(5 - review.rating) %}★{% endfor %}</span>
+                        </div>
+                        <p class="card-text">{{ review.review_text }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-4 text-muted">
+                    <p>No reviews yet. Be the first to rate this book!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reservationModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Confirm Reservation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="{{ url_for('books.reserve_book', book_id=book.book_id) }}" method="POST">
+                <div class="modal-body">
+                    <p class="text-muted">This book is currently unavailable. By reserving it, you will be placed in the queue and notified via email as soon as it returns.</p>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Your Name</label>
+                        <input type="text" class="form-control bg-light" value="{{ current_user.name }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email ID</label>
+                        <input type="text" class="form-control bg-light" value="{{ current_user.email }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Library ID</label>
+                        <input type="text" class="form-control bg-light" value="{{ current_user.library_id or 'Not Assigned' }}" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Contact Phone</label>
+                        <input type="number" name="phone" class="form-control" value="{{ current_user.phone }}" required placeholder="Enter phone number for SMS alerts">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

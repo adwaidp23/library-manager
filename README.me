@@ -1,0 +1,48 @@
+# 📚 Library Management System
+
+A robust, full-stack web application built with **Python Flask** and **MySQL** to manage library operations. This system handles the entire circulation cycle—from book acquisition and borrowing to returns and reservations—featuring role-based access control for Admins and Members.
+
+## 🚀 Key Features
+
+### 👤 User & Role Management
+* **Secure Authentication:** User registration and login using encrypted passwords (Bcrypt).
+* **Role-Based Access:** * **Members:** Browse, borrow, reserve, and review books.
+    * **Admins:** Manage inventory, view dashboards, manage users, and handle feedback.
+* **Secure Admin Registration:** Requires a secret key to register as an Administrator.
+
+### 📖 Book Inventory & Discovery
+* **Catalog Search:** Search by Title, Author, or ISBN.
+* **Smart Availability:** Real-time tracking of physical copies.
+* **AI Recommendations:** Suggests similar books based on genre when viewing details.
+* **Reviews & Ratings:** Users can leave star ratings and comments on books.
+
+### 🔄 Circulation System
+* **Borrowing Logic:** Users can borrow available books (stock decreases automatically).
+* **Returns:** One-click return process (stock increases).
+* **Overdue Tracking:** Admin dashboard highlights overdue books in red.
+* **Reservations:** Users can join a waitlist for out-of-stock books via a popup form.
+
+### 🛠 Admin Dashboard
+* **God-Mode View:** Track total users, books, and active loans.
+* **User Management:** Promote members to Admins or delete users (with safety checks for unreturned books).
+* **Feedback System:** View and manage user support tickets.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Backend:** Python 3, Flask
+* **Database:** MySQL (via SQLAlchemy ORM)
+* **Frontend:** HTML5, CSS3, Bootstrap 5 (Responsive Design)
+* **Authentication:** Flask-Login
+* **Security:** Flask-Bcrypt (Password Hashing)
+* **Migrations:** Flask-Migrate
+
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+* Python 3.x
+* MySQL Server installed and running
+

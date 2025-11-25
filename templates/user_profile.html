@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>My Profile</h2>
+            <div class="card p-3 bg-light">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Name:</strong> {{ current_user.name }}
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Email:</strong> {{ current_user.email }}
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Member Role:</strong> <span class="badge bg-secondary">{{ current_user.role }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-3">Currently Borrowed Books</h3>
+    
+    {% if loans %}
+    <div class="table-responsive">
+        <table class="table table-hover shadow-sm bg-white rounded">
+            <thead class="table-dark">
+                <tr>
+                    <th>Book Title</th>
+                    <th>Borrowed On</th>
+                    <th>Due Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                <tr>
+                    <td>
+                        <strong>{{ loan.copy.book.title }}</strong><br>
+                        <small class="text-muted">Author: {{ loan.copy.book.author }}</small>
+                    </td>
+                    <td>{{ loan.borrow_date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <span class="{% if loan.due_date < now %}text-danger fw-bold{% endif %}">
+                            {{ loan.due_date.strftime('%Y-%m-%d') }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('user.return_book', borrow_id=loan.borrow_id) }}" 
+                           class="btn btn-outline-success btn-sm">
+                           Return Book
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info">
+            You don't have any borrowed books at the moment. 
+            <a href="{{ url_for('books.search') }}">Go browse the catalog!</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

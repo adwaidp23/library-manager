@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4>Feedback & Support</h4>
+            </div>
+            <div class="card-body">
+                <p>Facing an issue? Or have a suggestion for a new book? Let us know!</p>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Subject / Issue Type</label>
+                        <select name="subject" class="form-select">
+                            <option>Report a Bug</option>
+                            <option>Book Request</option>
+                            <option>Account Issue</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" class="form-control" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
