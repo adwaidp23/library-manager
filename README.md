@@ -1,20 +1,19 @@
-# library-manager
+# Library Manager
 
 ## Project Overview
-This repository contains the `library-manager` project, a key component of my Data Science/Analytics portfolio.
+This full-stack Library Management System, built on Flask and MySQL, automates book circulation. It features secure Admin/User roles, real-time stock tracking, and AI recommendations. Users can borrow, return, and reserve books easily. Admins manage inventory and users via a detailed dashboard. Includes a REST API for future mobile integration.
+
+This repository is a part of my Data Analyst/Data Scientist portfolio. It demonstrates my ability to handle complex data, build robust models, and derive actionable insights.
 
 ## Features
 - End-to-end data processing pipeline
-- Interactive analytics
-- State-of-the-art modeling
+- Exploratory Data Analysis (EDA)
+- Robust modeling and predictive analytics
 
 ## Tech Stack
-- Python
-- Pandas, NumPy, Scikit-learn
-- Jupyter Notebooks
-
-## Architecture
-Data is ingested from source, cleaned, and processed through robust ML pipelines.
+- **Languages:** Python / SQL
+- **Libraries:** Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn
+- **Tools:** Jupyter Notebooks, Git
 
 ## Installation
 ```bash
@@ -25,11 +24,6 @@ pip install -r requirements.txt
 
 ## Usage
 Run the main scripts or Jupyter notebooks to see the analysis in action.
-
-## Project Structure
-- `src/` - Source code
-- `data/` - Dataset samples
-- `notebooks/` - Jupyter notebooks for exploratory analysis
 
 ## License
 MIT License
